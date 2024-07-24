@@ -6,46 +6,74 @@
   <title>Snake Game</title>
   <style>
     body {
-     body {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #F5D7E2; /* Cute pink background */
+      background-color: #1a1a1a; /* Dark gray background */
       margin: 0;
-    }
-
+      font-family: Arial, sans-serif;
     }
 
     .game-container {
       position: relative;
+      text-align: center;
+    }
+
+    .game-title {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333; /* Dark gray background */
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #fff; /* White text color */
+      font-size: 2em;
+      font-family: 'Arial Black', sans-serif;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .game-title:before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background-color: #333; /* Dark gray background */
+      transform: translateX(-50%) rotate(45deg);
     }
 
     #game-board {
       width: 400px; /* Adjust width for 20x20 grid with 20px cells */
       height: 400px; /* Adjust height for 20x20 grid with 20px cells */
-      border: 1px solid #333;
+      border: 2px solid yellow;
       display: grid;
       grid-template-columns: repeat(20, 20px); /* 20 columns for 20x20 grid */
       grid-template-rows: repeat(20, 20px); /* 20 rows for 20x20 grid */
+      background-color: blue;
+      margin-top: 60px; /* Space for curved title */
+      position: relative;
     }
 
     .snake {
-      width: 20px;
-      height: 20px;
-      background-color: #3399FF; /* Vibrant blue */
+      width: 10px;
+      height: 10px;
+      background-color: green; /* Vibrant blue */
       border: 1px solid #f0f0f0; /* for better visibility */
     }
 
     .food {
       width: 20px;
       height: 20px;
-      background-color: #FF6600; /* Vibrant orange */
+      background-color: #ff6600; /* Vibrant orange */
     }
   </style>
 </head>
 <body>
   <div class="game-container">
+    <div class="game-title">Snake Game</div>
     <div id="game-board"></div>
     <div id="score">Score: 0</div>
   </div>
@@ -55,7 +83,6 @@
       const scoreDisplay = document.getElementById('score');
       const gridSize = 20; // 20 x 20 grid
       const cellSize = 20; // each cell is 20px by 20px
-      const totalCells = gridSize * gridSize;
       const initialSnakeLength = 5;
       let snake = [{ x: 10, y: 10 }];
       let food = { x: 5, y: 5 };
@@ -89,9 +116,6 @@
         if (head.x === food.x && head.y === food.y) {
           score++;
           scoreDisplay.textContent = `Score: ${score}`;
-          if (score > 5) {
-            alert("Congratulations! 🎉 You scored more than 5! 🐍");
-          }
           generateFood();
           increaseSpeed();
         } else {
@@ -181,10 +205,15 @@
 
       function gameOver() {
         clearInterval(gameInterval);
-        alert(`Game Over! Your score is ${score} 🐍`);
-        gameBoard.innerHTML = '';
-        score = 0;
-        scoreDisplay.textContent = `Score: ${score}`;
+        if (confirm(`Game Over! Your score is ${score}. Do you want to start a new game?`)) {
+          // Reset game board and start new game
+          gameBoard.innerHTML = '';
+          startGame();
+        } else {
+          gameBoard.innerHTML = '';
+          score = 0;
+          scoreDisplay.textContent = `Score: ${score}`;
+        }
       }
 
       // Start the game
